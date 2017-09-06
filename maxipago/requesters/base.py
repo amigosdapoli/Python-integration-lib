@@ -1,4 +1,6 @@
 # coding: utf-8
+from builtins import str
+
 from maxipago.exceptions import ValidationError
 
 
@@ -24,7 +26,7 @@ class Requester(object):
         for field_name, field_options in self.fields:
             if field_name in self.cleaned_data:
                 translated_name = field_options.get('translated_name', field_name)
-                self.translated_data.append((translated_name, unicode(self.cleaned_data.get(field_name))))
+                self.translated_data.append((translated_name, str(self.cleaned_data.get(field_name))))
 
     def full_clean(self):
         self.cleaned_data = {}

@@ -1,5 +1,8 @@
 # coding: utf-8
-from urllib import urlencode
+from future.standard_library import install_aliases
+install_aliases()
+
+from urllib.parse import urlparse, urlencode
 from hashlib import md5
 from maxipago.managers.base import ManagerTransaction
 from maxipago.requesters.payment import PaymentRequester

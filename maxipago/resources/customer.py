@@ -1,5 +1,5 @@
 # coding: utf-8
-from StringIO import StringIO
+from io import BytesIO
 from maxipago.utils import etree
 from maxipago.resources.base import Resource
 from maxipago.exceptions import CustomerAlreadyExists, CustomerException
@@ -8,7 +8,7 @@ from maxipago.exceptions import CustomerAlreadyExists, CustomerException
 class CustomerAddResource(Resource):
 
     def process(self):
-        tree = etree.parse(StringIO(self.data))
+        tree = etree.parse(BytesIO(self.data))
 
         error_code = tree.find('errorCode').text
 
@@ -32,7 +32,7 @@ class CustomerAddResource(Resource):
 class CustomerDeleteResource(Resource):
 
     def process(self):
-        tree = etree.parse(StringIO(self.data))
+        tree = etree.parse(BytesIO(self.data))
 
         error_code = tree.find('errorCode').text
 
@@ -52,7 +52,7 @@ class CustomerDeleteResource(Resource):
 class CustomerUpdateResource(Resource):
 
     def process(self):
-        tree = etree.parse(StringIO(self.data))
+        tree = etree.parse(BytesIO(self.data))
 
         error_code = tree.find('errorCode').text
 
