@@ -267,6 +267,42 @@ class MaxipagoTestCase(unittest.TestCase):
         self.assertTrue(response.authorized)
         self.assertTrue(response.captured)
 
+    def test_payment_direct_refund(self):
+        REFERENCE = randint(1, 100000)
+
+        response = self.maxipago.payment.direct(
+            processor_id=payment_processors.TEST,
+            reference_num=REFERENCE,
+
+            billing_name=u'Fulano de Tal',
+            billing_address1=u'Rua das Alamedas, 123',
+            billing_city=u'Rio de Janeiro',
+            billing_state=u'RJ',
+            billing_zip=u'20345678',
+            billing_country=u'RJ',
+            billing_phone=u'552140634666',
+            billing_email=u'fulano@detal.com',
+
+            card_number='4111111111111111',
+            card_expiration_month=u'02',
+            card_expiration_year=date.today().year + 3,
+            card_cvv='123',
+
+            charge_total='100.00',
+        )
+
+        self.assertTrue(response.authorized)
+        self.assertTrue(response.captured)
+
+        response = self.maxipago.payment.refund(
+            order_id=response.order_id,
+            reference_num=REFERENCE,
+            charge_total='100.00',
+        )
+
+        self.assertTrue(response.authorized)
+        self.assertTrue(response.captured)
+
     def test_payment_direct_declined(self):
         REFERENCE = randint(1, 100000)
 

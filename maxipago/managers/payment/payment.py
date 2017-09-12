@@ -128,6 +128,16 @@ class PaymentManager(ManagerTransaction):
         requester = PaymentRequester(fields, kwargs)
         return self.send(command='return', requester=requester, resource=PaymentResource)
 
+    def refund(self, **kwargs):
+        fields = (
+            ('order_id', {'translated_name': 'orderID'}),
+            ('reference_num', {'translated_name': 'referenceNum'}),
+            ('charge_total', {'translated_name': 'payment/chargeTotal'}),
+        )
+
+        requester = PaymentRequester(fields, kwargs)
+        return self.send(command='return', requester=requester, resource=PaymentResource)
+
     def bank_slip(self, **kwargs):
         fields = (
             ('processor_id', {'translated_name': 'processorID'}),
