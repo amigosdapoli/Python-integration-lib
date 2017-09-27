@@ -5,7 +5,7 @@ from datetime import date
 from maxipago import Maxipago, exceptions
 from maxipago.utils import payment_processors
 from random import randint
-
+import xml.etree.ElementTree as ET
 
 MAXIPAGO_ID = os.getenv('MAXIPAGO_ID')
 MAXIPAGO_API_KEY = os.getenv('MAXIPAGO_API_KEY')
@@ -294,14 +294,14 @@ class MaxipagoTestCase(unittest.TestCase):
         self.assertTrue(response.authorized)
         self.assertTrue(response.captured)
 
-        response = self.maxipago.payment.refund(
+        response_refund = self.maxipago.payment.refund(
             order_id=response.order_id,
             reference_num=REFERENCE,
             charge_total='100.00',
         )
 
-        self.assertTrue(response.authorized)
-        self.assertTrue(response.captured)
+        self.assertTrue(response_refund.authorized)
+        self.assertTrue(response_refund.captured)
 
     def test_payment_direct_declined(self):
         REFERENCE = randint(1, 100000)
@@ -417,6 +417,42 @@ class MaxipagoTestCase(unittest.TestCase):
 
         self.assertFalse(response.authorized)
         self.assertFalse(response.captured)
+
+    def test_payment_recurring(self):
+        REFERENCE = randint(1, 100000)
+
+        response = self.maxipago.payment.create_recurring(
+            processor_id=payment_processors.TEST,
+            reference_num=REFERENCE,
+
+            billing_name=u'Fulano de Tal',
+            billing_address1=u'Rua das Alamedas, 123',
+            billing_city=u'Rio de Janeiro',
+            billing_state=u'RJ',
+            billing_zip=u'20345678',
+            billing_country=u'RJ',
+            billing_phone=u'552140634666',
+            billing_email=u'fulano@detal.com',
+
+            card_number='4111111111111111',
+            card_expiration_month=u'02',
+            card_expiration_year=date.today().year + 3,
+            card_cvv='123',
+
+            charge_total='100.00',
+            currency_code=u'BRL',
+
+            recurring_action=u'new',
+            recurring_start=date.today().strftime('%Y-%m-%d'),
+            recurring_frequency=u'1',
+            recurring_period=u'monthly',
+            recurring_installments=u'48',
+            recurring_failure_threshold=u'2',
+        )
+
+        self.assertTrue(response.authorized)
+        self.assertTrue(response.captured)
+
 
     def test_http_exception(self):
         CUSTOMER_ID = randint(1, 100000)
