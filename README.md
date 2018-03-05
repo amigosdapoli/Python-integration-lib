@@ -1,4 +1,6 @@
-Future home of the Python lib.
+MaxiPago Python 
+
+[![Travis-CI](https://travis-ci.org/amigosdapoli/Python-integration-lib.svg?branch=master)](https://travis-ci.org/amigosdapoli/Python-integration-lib)
 
 Notes: to run the tests do:
 
